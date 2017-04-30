@@ -1,3 +1,21 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Go Fundamentals](#go-fundamentals)
+  - [Hello World](#hello-world)
+    - [Setting up Workspace](#setting-up-workspace)
+    - [First Program](#first-program)
+    - [Functions Primer](#functions-primer)
+    - [Printing to screen](#printing-to-screen)
+    - [Running program](#running-program)
+    - [More detail](#more-detail)
+  - [Variables and Constants](#variables-and-constants)
+    - [Declaring at the Package Level](#declaring-at-the-package-level)
+    - [Determining Types](#determining-types)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Go Fundamentals
 
 > Learning Go with Pluralsight [course](https://app.pluralsight.com/library/courses/go-fundamentals/table-of-contents)
