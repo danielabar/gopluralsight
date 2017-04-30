@@ -13,6 +13,8 @@
   - [Variables and Constants](#variables-and-constants)
     - [Declaring at the Package Level](#declaring-at-the-package-level)
     - [Determining Types](#determining-types)
+    - [Short Assignment](#short-assignment)
+    - [Pointers](#pointers)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -174,4 +176,51 @@ func main() {
 
 For legibility, better to initialize multiple variables each on its own line.
 
-Cannot add integer and float (type mismatch error).
+Cannot add integer and float (type mismatch error):
+
+```go
+a := 10.0000000000
+b := 3
+c := a + b //invalid operation: a + b (mismatched types float64 and int)
+```
+
+But can convert float to int:
+
+```go
+a := 10.0000000000
+b := 3
+c := int(a) + b
+fmt.Println("\nC has value:", c, "and is of type:", reflect.TypeOf(c)) //C has value: 13 and is of type: int
+```
+
+Note that `a` is still a float, calling `int(a)` does not change `a` to int.
+
+### Short Assignment
+
+[shorg-asg.go](vars/short-asg.go)
+
+Variables declared at package level are available to all functions in the package, i.e. they're *global* in scope.
+
+Can also declare variables within a function, then use a shorthand declare-initialize construct:
+
+```go
+func main() {
+  name := "Nigel"
+}
+```
+
+Shorthand only works in functions, and when declaring and initializing variables on the same line. This is idiomatic Go.
+
+Note that a variable is declared in the shorthand notation in a function and not used, the program will not compile. Will get error like "somevar declared and not used". Whereas when variable declared at package level and not used, program will compile.
+
+### Pointers
+
+Go passes arguments by value, not by reference. When passing an argument to a function, Go makes a *copy* of the value being passed, places copy on the stack for use by the function. Variable itself is not placed on the stack.
+
+**Behind the scenes**
+
+When variable is created, Go sets aside memory for it, for eg: at memory addres `0xAA`, place a value "Docker Deep Dive".
+When this variable passed as argument to a function, Go makes a copy, eg: at memory address `0xBB`, value "Docker Deep Dive".
+Copy at `0xBB` is placed on stack. Achieves immutability, any changes made to var by function will only affect the copy, not the original.
+
+To workaround this default behaviour, use *pointers*.

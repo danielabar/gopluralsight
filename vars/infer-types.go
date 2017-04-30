@@ -20,7 +20,7 @@ func main() {
 	b := 3
 	fmt.Println("\nA is of type", reflect.TypeOf(a), "and B is of type", reflect.TypeOf(b))
 
-	c := a + b //invalid operation: a + b (mismatched types float64 and int)
+	c := int(a) + b
 
 	fmt.Println("\nC has value:", c, "and is of type:", reflect.TypeOf(c))
 }
