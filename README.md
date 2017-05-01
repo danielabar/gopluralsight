@@ -15,6 +15,7 @@
     - [Determining Types](#determining-types)
     - [Short Assignment](#short-assignment)
     - [Pointers](#pointers)
+    - [Passing by Value](#passing-by-value)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -223,4 +224,21 @@ When variable is created, Go sets aside memory for it, for eg: at memory addres 
 When this variable passed as argument to a function, Go makes a copy, eg: at memory address `0xBB`, value "Docker Deep Dive".
 Copy at `0xBB` is placed on stack. Achieves immutability, any changes made to var by function will only affect the copy, not the original.
 
-To workaround this default behaviour, use *pointers*.
+To workaround this default behaviour, use *pointers*. Ampersand before variable name represents memory address (aka pointer value) rather than value of the variable. Can also create a pointer variable using ampersand.
+
+In this example, the `ptr` variable holds the pointer value of the `module` variable. Asterisk in front of pointer variable dereferences it so we get the contents at that memory address:
+
+```go
+func main() {
+	module := 3.2
+	ptr := &module
+	fmt.Println("Ptr is", ptr, "and is of type", reflect.TypeOf(ptr)) //Ptr is 0xc42000a2c8 and is of type *float64
+	fmt.Println("Memory address of *module* variable is", ptr, "and the value of *module* is", *ptr) //Memory address of *module* variable is 0xc42000a2c8 and the value of *module* is 3.2
+}
+```
+
+Summary:
+* `&` references a pointer
+* `*` de-references a pointer
+
+### Passing by Value
