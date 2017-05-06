@@ -16,6 +16,7 @@
     - [Short Assignment](#short-assignment)
     - [Pointers](#pointers)
     - [Passing by Value](#passing-by-value)
+    - [Passing by Reference](#passing-by-reference)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -242,3 +243,35 @@ Summary:
 * `*` de-references a pointer
 
 ### Passing by Value
+
+To demonstrate, a function to change the value of a variable:
+
+```go
+// changeCourse gets a COPY of the course variable
+// course argument is a string and this function also returns a string
+func changeCourse(course string) string {
+  // Use = rather than := because not declaring a new variable,
+  // just assigning a new value to existing variable.
+	course = "First Look: Native Docker Clustering"
+
+	fmt.Println("Trying to change your cousrse to", course)
+	return course
+}
+```
+
+Return values can be named or unnamed. Above is example of unnamed.
+
+Now use the function. Note that any changes made to variable inside of function have no impact on original variable passed in.
+
+```go
+func main() {
+	name := "Nigel"
+	course := "Docker Deep Dive"
+
+	fmt.Println("\nHi", name, "you're currently watching", course) // Docker Deep Dive
+	changeCourse(course)
+	fmt.Println("\nHi", name, "you're currently watching", course) // Still Docker Deep Dive
+}
+```
+
+### Passing by Reference
