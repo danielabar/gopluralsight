@@ -320,3 +320,22 @@ const speedOfLightMph = 186000
 ```
 
 ### Accessing Environment Variables
+
+[env-vars.go](vars/env-vars.go)
+
+Use `os` package for access to various operating system stuff, including environment variables.
+
+Print out all environment variables with their values, one per line:
+
+```go
+for _, env := range os.Environ() {
+  fmt.Println(env)
+}
+```
+
+Get an environment variable by key and use it:
+
+```go
+name := os.Getenv("USER")
+fmt.Println("Hello", name)
+```
