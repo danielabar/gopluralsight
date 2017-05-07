@@ -18,6 +18,7 @@
     - [Passing by Value](#passing-by-value)
     - [Passing by Reference](#passing-by-reference)
     - [Constants](#constants)
+    - [Accessing Environment Variables](#accessing-environment-variables)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -311,3 +312,11 @@ func changeCourse(course *string) string {
 ```
 
 ### Constants
+
+Constants are immutable, once assigned a value, can never change. Declared with `const` keyword, but cannot use shorthand `:=` notation.
+
+```go
+const speedOfLightMph = 186000
+```
+
+### Accessing Environment Variables
