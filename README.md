@@ -19,6 +19,9 @@
     - [Passing by Reference](#passing-by-reference)
     - [Constants](#constants)
     - [Accessing Environment Variables](#accessing-environment-variables)
+  - [Functions](#functions)
+    - [Go Function Syntax](#go-function-syntax)
+    - [Function Basics](#function-basics)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -339,3 +342,24 @@ Get an environment variable by key and use it:
 name := os.Getenv("USER")
 fmt.Println("Hello", name)
 ```
+
+## Functions
+
+### Go Function Syntax
+
+Start with `func` keyword, followed by name of function, then parentheses. Any code executed inside of function goes in pair of curly braces.
+
+Function parameters are specified inside the parentheses. Includes parameter name and its type. `func` line is called *function signature*. Multiple parameters separated by commas.
+
+Return type also defined in function signature, after the parens but before the curly braces. Multiple return values must be enclosed in parens.
+
+Use `return` keyword to return a value back to caller.
+
+```go
+func titleCase(text string) string {
+  <code>
+  return convertedText
+}
+```
+
+### Function Basics
