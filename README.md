@@ -39,7 +39,7 @@ Go needs a *workspace*, root folder structure for apps. Under that need 3 sub-di
 
 ### First Program
 
-[hello-world.go](hello/hello-world.go)
+[Example](hello/hello-world.go)
 
 Every go program needs a *package declaration*, for example:
 
@@ -118,7 +118,7 @@ Comments are generally line comments `// this is a line comment`, even when span
 
 ### Declaring at the Package Level
 
-[hello-vars.go](vars/hello-vars.go)
+[Example](vars/hello-vars.go)
 
 Variables are *statically typed*. Eg, variable declared as string, its type set at compile time and can never change.
 
@@ -155,7 +155,7 @@ func main() {
 
 ### Determining Types
 
-[hello-types.go](vars/hello-types.go)
+[Example](vars/hello-types.go)
 
 Can check types with runtime reflection using `reflect` package.
 
@@ -168,7 +168,7 @@ func main() {
 
 Can also *infer* types:
 
-[infer-types.go](vars/infer-types.go)
+[Example](vars/infer-types.go)
 
 ```go
 var (
@@ -204,7 +204,7 @@ Note that `a` is still a float, calling `int(a)` does not change `a` to int.
 
 ### Short Assignment
 
-[shorg-asg.go](vars/short-asg.go)
+[Example](vars/short-asg.go)
 
 Variables declared at package level are available to all functions in the package, i.e. they're *global* in scope.
 
@@ -249,7 +249,7 @@ Summary:
 
 ### Passing by Value
 
-[pass-by-value](vars/pass-by-value.go)
+[Example](vars/pass-by-value.go)
 
 To demonstrate, a function to change the value of a variable:
 
@@ -283,7 +283,7 @@ func main() {
 
 ### Passing by Reference
 
-[pass-by-ref](vars/pass-by-ref.go)
+[Example](vars/pass-by-ref.go)
 
 Use pointers. `&` on variable passed in to function, and `*` on variable used within function.
 
@@ -324,7 +324,7 @@ const speedOfLightMph = 186000
 
 ### Accessing Environment Variables
 
-[env-vars.go](vars/env-vars.go)
+[Example](vars/env-vars.go)
 
 Use `os` package for access to various operating system stuff, including environment variables.
 
@@ -362,4 +362,11 @@ func titleCase(text string) string {
 }
 ```
 
+`main` function is special
+* gets called automatically
+* does not take any input parameters
+* does not return any values
+
 ### Function Basics
+
+[Example](functions/func-basics.go)
