@@ -22,6 +22,7 @@
   - [Functions](#functions)
     - [Go Function Syntax](#go-function-syntax)
     - [Function Basics](#function-basics)
+    - [Variadic Functions](#variadic-functions)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -370,3 +371,38 @@ func titleCase(text string) string {
 ### Function Basics
 
 [Example](functions/func-basics.go)
+
+### Variadic Functions
+
+[Example](functions/variadic.go)
+
+Used when don't know how many values will be passed to a function. Use ellipsis `...` before the type:
+
+```go
+func bestLeageFinishes(finishes ...int) {
+
+}
+```
+
+Values passed into the function get made into a slice of ints:
+
+```go
+bestFinish := bestLeagueFinishes(13, 10, 13, 17, 14, 16)
+```
+
+Slice is a list, in above example with 6 entries:
+
+0: 13
+1: 10
+2: 13
+3: 17
+4: 14
+5: 16
+
+Given a slice, can loop over it using `range`:
+
+```go
+for _, f := range finishes {
+  // do something with value f
+}
+```
