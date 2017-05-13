@@ -576,3 +576,39 @@ if err != nil {
 ## Loops
 
 ### for Syntax
+
+[Example]
+
+`expression` can be a Boolean (eg: `i < 10`) or a range. Can also be blank (which Go assumes to be `true`), which generates an infinite loop.
+
+```go
+for <expression> {
+  <code>
+}
+```
+
+Example using range. Range takes a list (either slice or a map) and iterates over the list. In every loop iteration, the current value of `courseList` is assigned to the variable `i`:
+
+```go
+for i := range courseList {
+  <code>
+}
+```
+
+For loop can be given simple pre and post expressions. eg:
+
+```go
+for i := 0; i < 10; i++ {
+  <code>
+}
+```
+
+pre: declare and initialize `i` to 0
+boolean: test for `i` less than 10
+post: increment `i` by one
+
+Variables declared in pre statement only available within scope of for loop.
+
+Pre statement runs only once, before first execution of loop, before evaluating expression.
+
+Post statement runs at end of every iteration through the loop.
