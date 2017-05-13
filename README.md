@@ -23,6 +23,14 @@
     - [Go Function Syntax](#go-function-syntax)
     - [Function Basics](#function-basics)
     - [Variadic Functions](#variadic-functions)
+  - [Conditionals](#conditionals)
+    - [if Syntax](#if-syntax)
+    - [Simple Initialization Statements](#simple-initialization-statements)
+    - [Switch Syntax](#switch-syntax)
+    - [Breaking and Fall-through](#breaking-and-fall-through)
+    - [The Role of if in Error Handling](#the-role-of-if-in-error-handling)
+  - [Loops](#loops)
+    - [for Syntax](#for-syntax)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -406,3 +414,165 @@ for _, f := range finishes {
   // do something with value f
 }
 ```
+
+## Conditionals
+
+### if Syntax
+
+[Example](conditionals/if-syntax.go)
+
+Works exactly the same as other languages. Evaluate a condition, if it's true branch one way, otherwise the other way.
+
+However, in Go, condition to evaluate **must evaluate to a Boolean expression**. Cannot use integers or strings. Strict approach keeps things clean.
+
+**Boolean Comparison Operators**
+
+`==` Equal to
+
+`!=` Not equal to
+
+`<` Less than
+
+`<=` Less than or equal to
+
+`>` Greater than
+
+`>=` Greater than or qual to
+
+`&&` AND
+
+`||` OR
+
+Anatomy of `if`. Note curly brace *MUST be on same line* as `if` expression. Because of how compiler inserts semicolons at end of each line. You don't type those in yourself, compiler inserts them.
+
+Can also use `else if` and `else`:
+
+```go
+if <Boolean expression> {
+  <code block>
+} else if <Boolean expression> {
+  <code block>
+} else {
+  <code block>
+}
+```
+
+If first `if` condition evaluates to true, the code jumps out of the entire `if` block, the subsequent `else if` and `else` statements will not be evaluated.
+
+Can have multiple `else if`'s but only a single `else` and must be the last statement.
+
+`if` statements can also be nested.
+
+### Simple Initialization Statements
+
+[Example](conditionals/if-syntax.go)
+
+These are optional and execute before the Boolean expression is evaluated.
+
+```go
+if <simple statement> ; <Boolean expression> {
+  <code block>
+}
+```
+
+Idiomatic go is to use this to initialize variables that will be used in the if block.
+
+Variables declared in the initialization statement are *scoped* to the `if` statement. When code finishes the `if` statement, these vars are out of scope and will be garbage collected.
+
+### Switch Syntax
+
+Both `simple statement` and `expression` are optional. But if do use `simple statement`, then following `;` is *mandatory*, even if no `expression` follows.
+
+Variables declared in `simple statement` are only scoped to the `switch` block.
+
+```go
+switch <simple statement> ; <expression> {
+case <expression>: <code>
+case <expression>: <code>
+...
+default: <code>
+}
+```
+
+`default` block executes if no matches in any of the `case` statements. Lexically it doesn't have to be the last option but more readable to have it at the bottom.
+
+Expression could be a string, eg:
+
+```go
+switch "Docker Deep Dive" {
+case "Docker Deep Dive": <code block will execute>
+case "Go Fundamentals": <code block will NOT execute>
+default: <code block also will not execute>
+}
+```
+
+`switch` type and `case` type must be the same in order for them to be comparable.
+
+After match is found, `switch` block is exited and code continues executing after the curly brace closing the `switch` block. Unlike other languages that have *implicit fallthrough*, after match is found, all cases below it also get executed. This does not happen with Go.
+
+### Breaking and Fall-through
+
+[Example](conditionals/fallthrough.go)
+
+Each `case` statement has an implicit `break`. But if want fallthrough behaviour, just add `fallthrough` keyword as last line in case statement.
+
+The following will output "Here are some recommended Docker Courses" AND "Here are some recommended Windows courses":
+
+```go
+topic := "docker"
+
+switch topic {
+case "linux":
+  fmt.Println("Here are some recommended Linux courses...")
+case "docker":
+  fmt.Println("Here are some recommended Docker courses...")
+  fallthrough
+case "windows":
+  fmt.Println("Here are some recommended Windows courses...")
+default:
+  fmt.Println("Sorry we couldn't find a match, " +
+    " why not try out Top 100 list!")
+}
+```
+
+`fallthrough` only applies on a case by case basis. If want them all to fallthrough, must specify the `falthrough` keyword on all of them.
+
+However, idiomatic GO is not to use `fallthrough`, but to make multiple matches in the same `case` statement using a comma separted list:
+
+```go
+switch tmpNum := random(); tmpNum {
+case 0, 2, 4, 6, 8:
+  fmt.Println("We got an even number -", tmpNum)
+case 1, 3, 5, 7, 9:
+  fmt.Println("We got an odd number -", tmpNum)
+}
+```
+
+[Full example](conditionals/not-fallthrough.go).
+
+### The Role of if in Error Handling
+
+[Example](conditionals/error-handling.go)
+
+Idiomatic to return an `error` as the last return from functions and methods. For example a function with two return values that tests connectivity to a host. Note that `error` is a standard type defined in Go:
+
+```go
+func testConn(target string) (respTime float 64 err error) {
+  ...
+}
+```
+
+If all went well in the function, it should return `nil` for the value of `err`. Otherwise, it should be not `nil`. i.e. `nil` is used to indicate success.
+
+Idiomatic Go is to *always* check the value of returned errors:
+
+```go
+if err != nil {
+  <error handling code>
+}
+<code...>
+```
+
+## Loops
+
+### for Syntax
