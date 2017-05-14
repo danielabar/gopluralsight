@@ -33,6 +33,9 @@
     - [for Syntax](#for-syntax)
     - [for ... range](#for--range)
     - [Break and Continue](#break-and-continue)
+  - [Arrays and Slices](#arrays-and-slices)
+    - [Arrays vs. Slices](#arrays-vs-slices)
+    - [Under the Hood](#under-the-hood)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -697,3 +700,75 @@ for timer := 10; timer >=0; timer-- {
 ```
 
 Above will only print the odd numbers to the screen, because the println and sleep statements are skipped for even numbers.
+
+## Arrays and Slices
+
+### Arrays vs. Slices
+
+[Example](array-slice/arr-slice-syntax.go)
+
+Go's handling of Arrays and Slices is different than other languages. Arrays and slices refer to *numbered* lists containing elements of the *same type*.
+
+Slices are almost always used in Go rather than arrays. But slices are "connected" to arrays.
+
+Array has static/fixed length.
+
+Slices look and feel just like arrays but have variable/flexible length. Can be resized by simply appending a value to the end. Can also create a shorter version by creating a `slice` of it.
+
+Slices must be built on top of an array. Elements in slice must be from contiguous elements in array.
+
+![Slice vs Array](images/array-vs-slice.png "Slice vs Array")
+
+Slices are variables that are *references* to array. No actual data is stored in the slice.
+
+Elements in slice are pointers to the real values stored in the array. Only thing stored in slice is (aka slice header):
+
+* name
+* type
+* starting offset in underlying array
+* length (flexible, can't be longer than underlying array)
+* capacity? (optional)
+
+Can have multiple slices pointing to same array.
+
+![Multiple Slices](images/multiple-slices.png "Multiple Slices")
+
+Changing value in a slice will change value in underlying array. i.e. all other slices will also see that change.
+
+Since slices are references, when they get passed into functions, they *effectively* get passed by reference.
+
+The slice header is copied by value to the function.
+
+To create a slice, use built-in `make` function, which takes up to 3 values:
+
+```go
+mySlice := make(<type>, <len>, <cap>)
+```
+
+**Length vs Capacity**
+
+Capacity specifies *maximum* size of slice, which is size of array that will back the slice. Any time a slice is created, Go also creates a hidden array to store the data from the slice.
+
+Square brackets with no number inside indicate that a slice is being created. `string` afterwards indicates its a slice of strings. For example
+
+```go
+myCourses := make([]string, 5, 10)
+```
+
+Using `make` can declare slice, but not initialize in same line. Hidden array created by `make` gets initialized with zero values (empty strings for `string` type). In above example, length of hidden array is 10.
+
+Using `make` command, capacity is optional. In this case hidden array will have capacity that is same as declared length of slice (5 in example below):
+
+```go
+myCourses :=make([]string, 5)
+```
+
+Can also declare and initialize array on one line using shorthand:
+
+```go
+myCourses := []string("Docker", "Puppet", "Python ")
+```
+
+Above creates new slice of strings, with length and capacity of 3.
+
+### Under the Hood
