@@ -36,6 +36,8 @@
   - [Arrays and Slices](#arrays-and-slices)
     - [Arrays vs. Slices](#arrays-vs-slices)
     - [Under the Hood](#under-the-hood)
+    - [append()](#append)
+    - [Miscellaneous](#miscellaneous)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -772,3 +774,93 @@ myCourses := []string("Docker", "Puppet", "Python ")
 Above creates new slice of strings, with length and capacity of 3.
 
 ### Under the Hood
+
+[Example](array-slice/slice.go)
+
+Slices indexed from 0:
+
+```go
+mySlice := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+fmt.Println(mySlice[4]) //prints 5
+```
+
+But length and capacity start at 1.
+
+![Index Position](images/index-pos.png "Index Position")
+
+Index position can be used to change:
+
+```go
+mySlice[1] = 0
+```
+
+To get a smaller slice:
+
+```go
+sliceOfSlice := mySlice[2:5]
+```
+
+Returns a new slice with values of original slice at index positions 2 through 4 inclusive. i.e. left hand operator is inclusive and right hand operator is exclusive.
+
+When creating a slice, if no value specified before colon operator, then index value 0 is implied
+
+```go
+sliceOfSlice := mySlice[:5] // same as if had specified mySlice[0:5]
+```
+
+Same with other side `[5:]`, then last position of underlying array is inferred (i.e. length of array - 1).
+
+### append()
+
+[Example](array-slice/append.go)
+
+Benefit of slices over arrays is flexibility. Use built-in `append` function to add an element to slice.
+
+If call append after array capacity is full, go will create a new array twice the size of original and copy the values over:
+
+```go
+mySlice := make([]int, 1, 4)
+fmt.Printf("\nCapacity is %d", cap(mySlice))
+
+for i := 1; i < 17; i++ {
+  mySlice = append(mySlice, i)
+  fmt.Printf("\nCapacity is %d", cap(mySlice))
+}
+```
+
+Output:
+
+```
+Capacity is 4
+Capacity is 4
+Capacity is 4
+Capacity is 4
+Capacity is 8
+Capacity is 8
+Capacity is 8
+Capacity is 8
+Capacity is 16
+Capacity is 16
+Capacity is 16
+Capacity is 16
+Capacity is 16
+Capacity is 16
+Capacity is 16
+Capacity is 16
+Capacity is 32
+```
+
+### Miscellaneous
+
+Referencing a slice variable references the *entire* slice, not just the first value.
+
+```go
+mySlice := []int{1, 2, 3, 4, 5}
+fmt.Println(myslice) // [1, 2, 3, 4, 5]
+
+for _, i := range mySlice {
+  fmt.Println("for range loop:", i) // for range loop: 1, for range loop: 2, etc.
+}
+```
+
+Slices can be iterated for `for... range` loops.
