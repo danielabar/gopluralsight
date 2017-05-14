@@ -31,6 +31,8 @@
     - [The Role of if in Error Handling](#the-role-of-if-in-error-handling)
   - [Loops](#loops)
     - [for Syntax](#for-syntax)
+    - [for ... range](#for--range)
+    - [Break and Continue](#break-and-continue)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -612,3 +614,86 @@ Variables declared in pre statement only available within scope of for loop.
 Pre statement runs only once, before first execution of loop, before evaluating expression.
 
 Post statement runs at end of every iteration through the loop.
+
+### for ... range
+
+[Example](loops/for-range.go)
+
+```go
+// declare and define a list of courses,
+// technically, its a "slice": unordered numbered list of items
+// behind the scenes, its a reference to an array
+coursesInProg := []string{"Docker Deep Dive", "Docker Clustering", "Docker and Kubernetes"}
+
+for _, i := range coursesInProg {
+  fmt.Println(i)
+}
+```
+
+Prints out:
+
+```
+Docker Deep Dive
+Docker Clustering
+Docker and Kubernetes
+```
+
+Range goes over each item in a slice, one value at a time until it gets to end of slice. One element *per iteration of loop*.
+
+With slices, `range` returns 2 values for each iteration: 1) index value (not used in above example that's why `_` is used to assign index to it, indicating its ignored), and 2) data value. In above example, data value is assigned to `i` variable.
+
+Loops can also be nested.
+
+### Break and Continue
+
+`break` can be used to break out of current loop. With nested loops, breaks out of *current* loop.
+
+```go
+for <expr...> {
+  <code>
+  for <expr...> {
+    <code>
+    for <expr...> {
+      <code>
+      break //breaks out of inner loop and back into middle loop
+    }//inner loop
+  }//middle loop
+}//outer loop
+```
+
+To break out of any arbitrary loop, for example, from inner `break`, want to go out to outer loop, use `label` (note label name is arbitrary):
+
+```go
+for <expr...> {
+  <code>
+myBreakpoint
+  for <expr...> {
+    <code>
+    for <expr...> {
+      <code>
+      break myBreakPoint
+      }//inner loop
+      }//middle loop
+      }//outer loop
+code
+```
+
+If a label is defined, you *must* use it, otherwise won't compile.
+
+**Continue**
+
+When `continue` is encountered in a loop, normal execution is interrupted, and control passes back *immediately* to top of loop.
+
+```go
+for timer := 10; timer >=0; timer-- {
+  // if timer value is an even number,
+  // stop here and resume execution at top of loop
+  if timer % 2 == 0 {
+    continue
+  }
+  fmt.Println(timer)
+  time.Sleep(1 * time.Second)
+}
+```
+
+Above will only print the odd numbers to the screen, because the println and sleep statements are skipped for even numbers.
