@@ -38,6 +38,9 @@
     - [Under the Hood](#under-the-hood)
     - [append()](#append)
     - [Miscellaneous](#miscellaneous)
+  - [Maps](#maps)
+    - [Syntax](#syntax)
+    - [Iteration and Ordering](#iteration-and-ordering)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -863,4 +866,81 @@ for _, i := range mySlice {
 }
 ```
 
-Slices can be iterated for `for... range` loops.
+Slices can be iterated for `for... range` loops, which returns two values, index position, and data value. Index position can be ignored by assigning it to underscore variable.
+
+Slices can be appended to other slices using ellipses, i.e. appending more values to a slice of a type that the slice currently holds.
+
+```go
+mySlice := []int{1, 2, 3, 4, 5}
+newSlice := []int{10, 20, 30}
+mySlice = append(mySlice, newSlice...)
+```
+
+This doesn't append `newSlice`, but rather appends the *elements* of `newSlice` to `mySlice`.
+
+Can also create multi-dimensional slices, just add slices as elements within a slice. Each slice within a multi-dimensional slice can be of a different length.
+
+## Maps
+
+Similar to arrays and slices in that they're lists. But they're *unordered*. Go randomizes starting offset when accessing maps.
+
+Maps are list of `<key>:<value>` pairs.
+
+Can append, update, and remove entries from maps.
+
+Maps are reference types (like slices).
+
+All keys in a map must be unique.
+
+### Syntax
+
+[Example](maps/map-syntax.go)
+
+Must declare both key type and value type when creating map.
+
+Key type must be *comparable* type, i.e. a type that can be compared using `==` or `!=` boolean operators. (eg: bools, strings, numeric types, and any other type that is composed of those types, but not slices).
+
+```go
+map[keyType]valueType
+```
+
+Can use built in `make` function to build a map. Eg, make a map of string keys and int values:
+
+```go
+leageTitles := make(map[string]int)
+// add some values
+leageTitles["Sunderland"] = 6
+leageTitles["Newcastle"] = 4
+```
+
+Can also declare and initialize maps in one line using composite literal form:
+
+```go
+recentHead2Head := map[string]int {
+  "Sunderland": 5,
+  "Newcastle": 0
+}
+```
+
+### Iteration and Ordering
+
+[Example](maps/map-iter.go)
+
+Use `range` to iterate over a map, returns two values the key of the current map entry, and the value in the map at that key.
+
+```go
+testMap := map[string]int{"A": 1, "B": 2, "C": 3, "D": 4, "E": 5}
+for key, value := range testMap {
+  fmt.Printf("Key is: %v Value is : %v\n", key, value)
+}
+```
+
+Outputs:
+
+```
+Key is: A Value is : 1
+Key is: B Value is : 2
+Key is: C Value is : 3
+Key is: D Value is : 4
+Key is: E Value is : 5
+```
