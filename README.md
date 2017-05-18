@@ -41,6 +41,10 @@
   - [Maps](#maps)
     - [Syntax](#syntax)
     - [Iteration and Ordering](#iteration-and-ordering)
+    - [Manipulating Maps](#manipulating-maps)
+    - [References and Performance](#references-and-performance)
+  - [Structs](#structs)
+    - [What is a Struct](#what-is-a-struct)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -944,3 +948,68 @@ Key is: C Value is : 3
 Key is: D Value is : 4
 Key is: E Value is : 5
 ```
+
+**IMPORTANT:**
+Do not depend on key order, if run the program several times, notice output changes, because Go uses a random starting offset. eg:
+
+```
+Key is: B Value is : 2
+Key is: C Value is : 3
+Key is: D Value is : 4
+Key is: E Value is : 5
+Key is: A Value is : 1
+```
+
+### Manipulating Maps
+
+[Example](maps/map-manipulate.go)
+
+Items in map referenced the same way as slices, using `[]` notation.
+
+```go
+testMap := map[string]int{"A": 1, "B": 2, "C": 3, "D": 4, "E": 5}
+fmt.Println(testMap["C"]) // 3
+```
+
+To update an existing value in the map:
+
+```go
+testMap["A"] = 100
+fmt.Println(testMap) // map[A:100 B:2 C:3 D:4 E:5]
+```
+
+To insert a value in the map, use same syntax as update:
+
+```go
+testMap["F"] = 6
+fmt.Println(testMap) // [D:4 E:5 F:6 A:100 B:2 C:3]
+```
+
+When using `someMap["somekey"] = someVal` syntax, if `someKey` is already a key in the map, its associated data value will be updated to `someVal`, otherwise, `someKey` will be inserted into `someMap` with a value of `someVal`.
+
+To delete an item from a map, use `delete` built-in function, passing in name of map and key to be deleted, will delete key and value:
+
+```go
+delete(testMap, "F")
+fmt.Println(testMap) // map[B:2 C:3 D:4 E:5 A:100]
+```
+
+### References and Performance
+
+Maps are *reference types*, ie. maps get passed by reference rather than by value to functions. Go does NOT make a separate copy of the maps values and place a copy of the values on the call stack. Therefore any changes made to map are visible to caller and any other functions that use the map.
+
+Maps are NOT safe for concurrency, because its undefined what happens if two different processes read and write to the same map at the same time.
+
+Passing maps is cheap because its just pointers being passed rather than actual data.
+
+Good practice to specify size of map when defining it. Not mandatory but can improve performance for large maps:
+
+```go
+myMap := make(map[<keyType]<valueType>, size)
+```
+
+Go can increment size of maps as needed in the background but there is overhead associated with that.
+
+## Structs
+
+### What is a Struct
