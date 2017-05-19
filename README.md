@@ -50,6 +50,10 @@
     - [Working with Structs](#working-with-structs)
   - [Concurrency](#concurrency)
     - [What is Concurrency](#what-is-concurrency)
+    - [What is a Concurrent Program](#what-is-a-concurrent-program)
+    - [Concurrency In Go](#concurrency-in-go)
+    - [Writing a Concurrent Go Program](#writing-a-concurrent-go-program)
+    - [Channels](#channels)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -1101,3 +1105,112 @@ fmt.Println("\nDocker Deep Dive rating is:", DockerDeepDive.Rating) // Docker De
 ## Concurrency
 
 ### What is Concurrency
+
+Creating multiple processes that execute *independently* (which does not mean simultaneously).
+
+"...concurrency is the *composition* of independently executing rocesses, while parallelism is the simultaneous *execution* of (possibly related) computations. Concurrency is about *dealing with* lots of things at once. Parallelism is about *doing* lots of things at once." --Rob Pike
+
+### What is a Concurrent Program
+
+Assume a cpu with single core. When a program (application) is run, OS creates a *process*, which is the run-time instance of the program. Process keeps track of programs memory, file handles etc. Process starts with single *thread*. Thread is what actually runs on the processor core and executes the program.
+
+Every program starts with a single main thread, which can launch many more threads. OS schedules threads against processor cores.
+
+Threads are how concurrency and parallelism are achieved. For parallelism, need more cores so that a thread can run on each core in parallel.
+
+For concurrency, with a single core... Go doesn't use threads for concurrency (they're resource heavy and complicated).
+
+### Concurrency In Go
+
+Go's concurrency model does use threads under the hood, but concurrency action happens via lightweight abstractin layered on top of threads - goroutine. Goroutine's not scheduled by OS, scheduled by the Go runtime.
+
+**goroutines vs OS Threads**
+
+* goroutines are lightweight compared to traditional thread (eg: stacksize 1M vs single-digit kb)
+* OS schedules threads whereas Go runtime manages goroutines (creating, tearing down, etc), less complexity for programmer having the runtime deal with it
+* OS threads - switches expensive, still expensive with Go switching but the way goroutines layered on top of threads results in fewer switches
+* When goroutine blocks (eg: waiting on network or disk I/O, sleeping etc.), Go runtime swaps it out for another goroutine running on the *same thread*. There is some overhead but way less than using OS to schedule a new thread.
+* goroutines have faster start-up times
+* Due to *channels* goroutines can easily/safely communicate with eachother
+
+**Go's concurrency model**
+
+Actor model.
+
+Communicating Sequential Processes (CSP).
+
+Actors safely pass messages between each other via *channels*.
+
+goroutine's are the actors.
+
+Channels are like pipes - one goroutine puts data onto a channel and another goroutine retrieves it off the channel.
+
+![Channel Send](images/channel1.png "Channel Send")
+
+![Channel Receive](images/channel2.png "Channel Receive")
+
+### Writing a Concurrent Go Program
+
+[Example](concurrency/concurrent-example.go)
+
+Simply add `go` keyword in front of function to convert it to a go routine, which makes it run concurrently:
+
+```go
+func main() {
+
+	// self-executing anonymous function
+	go func() {
+		// this will put ENTIRE PROGRAM to sleep for 5 seconds (if not using goroutine)
+		time.Sleep(5 * time.Second)
+		fmt.Println("Hello")
+	}()
+
+	// self-executing anonymous function
+	go func() {
+		fmt.Println("Pluralsight")
+	}()
+}
+```
+
+When execution reaches first `go` statement, makes a goroutine of that function and starts running it. When it hits `time.Sleep`, does not block entire program, but just that goroutine.
+
+Then next anonymous function, which is also a goroutine will get switched on to the thread in the first one's case.
+
+Think of `main` as a goroutine even though its not really. As soon as `main` exits, entire program exits, including all goroutines. So in above example, `main` will exit before either of the two anonymous function goroutines get a chance to execute.
+
+Solution is to use `WaitGroup` from `sync` package so that goroutines can tell `main` when they're done. Then main uses WaitGroup to wait.
+
+```go
+func main() {
+
+	var waitGrp sync.WaitGroup
+	waitGrp.Add(2)
+
+	// self-executing anonymous function
+	go func() {
+		defer waitGrp.Done()
+
+		// this will put ENTIRE PROGRAM to sleep for 5 seconds (if not using goroutine)
+		time.Sleep(5 * time.Second)
+		fmt.Println("Hello")
+	}()
+
+	// self-executing anonymous function
+	go func() {
+		defer waitGrp.Done()
+
+		fmt.Println("Pluralsight")
+	}()
+
+	waitGrp.Wait()
+}
+```
+
+With above changes, output is:
+
+```
+Pluralsight // then 5 seconds waiting
+Hello
+```
+
+### Channels
