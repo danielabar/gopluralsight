@@ -45,6 +45,11 @@
     - [References and Performance](#references-and-performance)
   - [Structs](#structs)
     - [What is a Struct](#what-is-a-struct)
+    - [Object Oriented Programming in Go](#object-oriented-programming-in-go)
+    - [Defining a Struct](#defining-a-struct)
+    - [Working with Structs](#working-with-structs)
+  - [Concurrency](#concurrency)
+    - [What is Concurrency](#what-is-concurrency)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -1013,3 +1018,86 @@ Go can increment size of maps as needed in the background but there is overhead 
 ## Structs
 
 ### What is a Struct
+
+Allow defining custom data types. Use when built-in types are not ideal or expressive enough.
+A collection of named fields, where each field is of a specific type.
+
+Example, working with geometric shapes. This defines a new type but does not instantiate any new variables:
+
+```go
+type Circle struct {
+  radius float64
+  diameter float64
+  circumference float64
+}
+```
+
+Now when need to work with a circle, can create a new variable and make its type the `Circle` type.
+
+### Object Oriented Programming in Go
+
+OO languages have Objects, Classes, Inheritance.
+
+Go does not have an `Object` type. `struct` is as close as it gets in that they have named fields and can even have methods, but they don't support inheritance. Also does not have `Class` keyword.
+
+Can do some forms of OOP with Go but its not the best suited for that style of programming.
+
+### Defining a Struct
+
+[Example](structs/define-struct.go)
+
+Given a struct as follows:
+
+```go
+type courseMeta struct {
+  Author string
+  Level  string
+  Rating float64
+}
+```
+
+Can declare a variable of that type:
+
+```go
+var DockerDeepDive courseMeta
+```
+
+Or use `new` keyword. Note that this way gives a pointer:
+
+```go
+DockerDeepDive := new(courseMeta)
+```
+
+Either of the above ways initializes all the fields in the struct with zero values.
+
+Can also use composite literal. If know the order of fields defined in struct, could leave them off here:
+
+```go
+DockerDeepDive := courseMeta{
+  Author: "Nigel Poulton",
+  Level: "Intermediate",
+  Rating: 5,
+}
+fmt.Println(DockerDeepDive) // {Nigel Poulton Intermediate 5}
+```
+
+### Working with Structs
+
+[Example](structs/working-struct.go)
+
+Access individual fields of a struct using dot `.` operator:
+
+```go
+fmt.Println("\nDocker Deep Dive author is:", DockerDeepDive.Author) // fmt.Println("\nDocker Deep Dive author is:", DockerDeepDive.Author)
+```
+
+Change a field:
+
+```go
+DockerDeepDive.Rating = 1
+fmt.Println("\nDocker Deep Dive rating is:", DockerDeepDive.Rating) // Docker Deep Dive rating is: 1
+```
+
+## Concurrency
+
+### What is Concurrency
