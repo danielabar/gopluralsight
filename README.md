@@ -1213,4 +1213,32 @@ Pluralsight // then 5 seconds waiting
 Hello
 ```
 
+To make the above program parallel, i.e. have each goroutine execute simultaneously on separate threads or cores, use `runtime` package. See [example](concurrency/parallel-example.go).
+
+`runtime.GOMAXPROCS(n)` increases number of virtual processes (i.e. threads) available to the program. Simple and dangerous because parallel program introduces some complexities.
+
 ### Channels
+
+Channels can be *bufferred* or *unbufferred*.
+
+To create an unbufferred channel, do not specify a size or number of buffers for the channel. This means the channel cannot hold any items, just a conduit through which goroutines can safely pass data.
+
+```go
+myChannel := make(chan int)
+```
+
+goroutine that puts data on an unbufferred channel must wait for another goroutine to be ready to retrieve the data. i.e goroutine putting data on an unbufferred channel will *block* until another goroutine gets the data off the channel. Then goroutine that put the data on the channel can unblock and continue with its work. This enforces a synchronous workflow.
+
+Bufferred channel created also using built-in `make` function and `chan` keyword, but also given a size - number of buffers, 5 in this example:
+
+```go
+myChannel := make(chan int, 5)
+```
+
+Number of buffers represents how many data items the channel can hold.
+
+goroutine that places data on a bufferred channel will NOT block waiting for another goroutine to pick up this data. This leads to asynchronous behaviour.
+
+But if bufferred channel is full and goroutine places data on it, it will block until some space becomes free.
+
+Any goroutine that tries to take data off a channel will block if there's no data available. This is true for bufferred and unbufferred channels.
