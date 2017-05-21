@@ -57,9 +57,12 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# Go Fundamentals
+# Go Fundamentals and Concurrent Programming
 
 > Learning Go with Pluralsight [course](https://app.pluralsight.com/library/courses/go-fundamentals/table-of-contents)
+
+> Concurrent Programming with Go
+[course](https://app.pluralsight.com/library/courses/go-concurrent-programming/table-of-contents)
 
 ## Hello World
 
@@ -1135,9 +1138,7 @@ Go's concurrency model does use threads under the hood, but concurrency action h
 
 **Go's concurrency model**
 
-Actor model.
-
-Communicating Sequential Processes (CSP).
+Actor model (also used by Erlang). Communicating Sequential Processes (CSP).
 
 Actors safely pass messages between each other via *channels*.
 
@@ -1149,9 +1150,48 @@ Channels are like pipes - one goroutine puts data onto a channel and another gor
 
 ![Channel Receive](images/channel2.png "Channel Receive")
 
+Individual entities work in synchronous, isolated manner, using only data they are provided with, then passing results on to whatever is downstream that needs the results.
+
+***Actor***
+
+Responsible for receiving input data, applying processing to it, then passing result to next Actor in chain. Actors have no asynchronous programming within themselves, which keeps their code relatively simple. Actors can be kept small because its not an issue to create thousands of them.
+
+***Message***
+
+Object that is passed between two actors. No constraint on content of message, but once it has been passed from one actor to another, info contained within message is no longer accessible to sender. i.e. only one Actor can work with the data in the message at a time.
+
+***Advantages***
+
+* Fully Decoupled - actors don't have to know about each other, only need to know where to get messages from, and where to put messages when they have a result ready.
+* Multiple Handlers - Due to decoupling, can have different number of message generators vs message consumers. eg, messages could be generated 100x faster than can be processed. Can spin up 100 actors to handle message processing, i.e. no bottleneck!
+* Memory Isolation - Messages designed to only be available to one actor at a time, eliminates need for shared memory.
+
+***Disadvantages***
+
+* Complicated Mental Model - more complex to understand than other concurrency pattpatternsersn such as threads, events, callbacks, and promises.
+* Traceability - harder to trace through execution path through layers that build up. Without careful app design, will be difficult to understand which actors are passing messages to each other.
+
+***Concurrency in Go***
+
+No thread primitives - cannot directly manipulate processor threads.
+
+Goroutines are "thread-like" constructs, but not the same as processor threads. Belong to a class of threads known as "virtual threads". Does not maintain a 1-1 relationship with processor threads.
+
+Goroutines managed by the Go runtime - handles scheduling goroutines on processor threads that are available to the app. Execution stack of a goroutine starts out way smaller (~2K) than processor thread (~1M). Stack space can be expanded as needed.
+
+re: CSP model, goroutines are the actors responsible for synchronously executing a task.
+
+"Channel" is Go primitive for strongly typed messages to pass through, goroutines use this to communicate. Channels responsible for synchronizing two actors, so programmer does not need to worry about it.
+
+***Parallelism in Go***
+
+To turn a concurrent program into parallel, `GOMAXPROCS` function in `runtime` package used to make more than one processor available. By default, Go apps can only use one logical processor (could still be concurrent, but will only run one goroutine at a time).
+
+`GOMAXPROCS` sets max number of CPUs that can be executing simultaneously and returns the previous setting. If set to > 1, goroutines get spread across all permissible cores.
+
 ### Writing a Concurrent Go Program
 
-[Example](concurrency/concurrent-example.go)
+[Example 1](concurrency/concurrent-example.go)
 
 Simply add `go` keyword in front of function to convert it to a go routine, which makes it run concurrently:
 
@@ -1216,6 +1256,8 @@ Hello
 To make the above program parallel, i.e. have each goroutine execute simultaneously on separate threads or cores, use `runtime` package. See [example](concurrency/parallel-example.go).
 
 `runtime.GOMAXPROCS(n)` increases number of virtual processes (i.e. threads) available to the program. Simple and dangerous because parallel program introduces some complexities.
+
+[Example 2](goroutines/basic.go)
 
 ### Channels
 
