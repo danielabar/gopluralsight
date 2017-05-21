@@ -2,7 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Go Fundamentals](#go-fundamentals)
+- [Go Fundamentals and Concurrent Programming](#go-fundamentals-and-concurrent-programming)
   - [Hello World](#hello-world)
     - [Setting up Workspace](#setting-up-workspace)
     - [First Program](#first-program)
@@ -53,6 +53,8 @@
     - [What is a Concurrent Program](#what-is-a-concurrent-program)
     - [Concurrency In Go](#concurrency-in-go)
     - [Writing a Concurrent Go Program](#writing-a-concurrent-go-program)
+      - [Asynchronous Web Services](#asynchronous-web-services)
+      - [Filewatcher](#filewatcher)
     - [Channels](#channels)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -1271,6 +1273,10 @@ Packages used in demo:
 * `io/ioutil` ability to read response from web service
 * `encoding/xml` unmarshall response body from web service to formatted xml object and convert to Go object
 * `fmt` to print retrieved stock price to console
+
+#### Filewatcher
+
+Demo TBD...
 
 ### Channels
 
