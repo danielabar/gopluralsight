@@ -1259,6 +1259,19 @@ To make the above program parallel, i.e. have each goroutine execute simultaneou
 
 [Example 2](goroutines/basic.go)
 
+#### Asynchronous Web Services
+
+[Demo](goroutines/web-services.go)
+
+Make use of [markitondemand](http://dev.markitondemand.com/MODApis/Api/v2/Quote?symbol=googl)
+
+Packages used in demo:
+
+* `net/http` to make http calls to web service
+* `io/ioutil` ability to read response from web service
+* `encoding/xml` unmarshall response body from web service to formatted xml object and convert to Go object
+* `fmt` to print retrieved stock price to console
+
 ### Channels
 
 Channels can be *bufferred* or *unbufferred*.
