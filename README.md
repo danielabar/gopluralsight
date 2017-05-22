@@ -1263,7 +1263,9 @@ To make the above program parallel, i.e. have each goroutine execute simultaneou
 
 #### Asynchronous Web Services
 
-[Demo](goroutines/web-services.go)
+More useful example:
+
+[Demo](goroutines/web-service.go)
 
 Make use of [markitondemand](http://dev.markitondemand.com/MODApis/Api/v2/Quote?symbol=googl)
 
@@ -1276,7 +1278,19 @@ Packages used in demo:
 
 #### Filewatcher
 
-Demo TBD...
+Another useful example, watching a location on the file system, and reacting when a new file shows up. Example - watch for new invoices and process them. In example below, invoices are csv files with fields: invoice number, invoice amount, purchase order number, transaction date in unix timestamp format.
+
+Packages used in demo:
+
+* `os` for access to file system.
+* `fmt` to print report on processed invoices
+* `time` to convert unix timestamps to time object
+* `io/ioutil` to read contents of invoice files into memory
+* `strings` to read contents of invoice files into reader for csv package (see below)
+* `encoding/csv` parse a string in csv format into its individual fields
+* `strconv` used when data has non-string fields
+
+[Demo](goroutines/file-watcher.go)
 
 ### Channels
 
