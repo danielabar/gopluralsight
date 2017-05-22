@@ -35,6 +35,7 @@ func main() {
 
 			// read all contents of file and tore in a variable
 			data, _ := ioutil.ReadAll(f)
+			println("=== DEBUG read all data = ", data)
 
 			// done with file so close it, not using Defer because that waits until function exits,
 			// but this code runs inside main function therefore won't exit until program exits,
@@ -45,10 +46,12 @@ func main() {
 			// was processed correctly, but that requires tracking file names, don't want to overcomplicate
 			// this demo
 			os.Remove(filePath)
+			println("=== DEBUG: deleting ", filePath)
 
 			// asynchronously process file in goroutine with self invoking anonymous function
 			// pass in data parameter to keep this isolated from data changes in outer scope
 			go func(data string) {
+				println("=== DEBUG: inside goroutine with data = ", data)
 				// get a reader from csv package, note that it does not work with a raw string,
 				// it needs a reader object. We don't want to pass in file handle from outer scope,
 				// to keep this isolated, therefore use strings package to convert string to reader
@@ -74,10 +77,13 @@ func main() {
 					invoice.InvoiceDate = time.Unix(unixTime, 0)
 
 					// print message confirming all data received as expected
-					fmt.Printf("Received invoice '%v' for $%.2f and submitted", invoice.Number, invoice.Amount)
+					fmt.Printf("Received invoice '%v' for $%.2f and submitted\n", invoice.Number, invoice.Amount)
 				} //for reach record
 			}(string(data))
+			println("=== DEBUG: bottom of for loop")
 		} //for each file in watch dir
+		d.Close()
+		time.Sleep(100 * time.Millisecond)
 	} //loop forever
 } //main
 
