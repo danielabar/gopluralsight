@@ -1294,6 +1294,13 @@ Packages used in demo:
 
 ### Channels
 
+All about communication, provide safe way to send messages through application.
+
+**Channel Advantages**
+* Communication: Are independent objects -> can be distributed to actors without those actors knowing about each other, which leads to  decoupled architecture, makes actors easy to test and debug.
+* Isolation: Can isolate actors from each other. Provide safe path for data to flow between threads. When actor puts message on channel to be sent, all its references to message are invalidated, ensures only one actor can manipulate message data at a time.
+* Synchronization: Channels have internal sync mechanism, so neither sender or receiver actors have to contain "wait" code.
+
 Channels can be *bufferred* or *unbufferred*.
 
 To create an unbufferred channel, do not specify a size or number of buffers for the channel. This means the channel cannot hold any items, just a conduit through which goroutines can safely pass data.
@@ -1317,3 +1324,33 @@ goroutine that places data on a bufferred channel will NOT block waiting for ano
 But if bufferred channel is full and goroutine places data on it, it will block until some space becomes free.
 
 Any goroutine that tries to take data off a channel will block if there's no data available. This is true for bufferred and unbufferred channels.
+
+**Memory Isolation**
+
+In typical apps (before Go), memory stored  globally. Need to keep track of which process is manipulating it, and impact of doing so. Solution is *memory isolation*. Eg in OOP, hide data inside object and expose behaviour that those objects can do. Worked ok until multi-core cpu's lead to multi-threaded program. Now those objects could be accessed by multiple threads at the same time, leading to unpredictable behaviour.
+
+One solution is to make data *immutable*, used by functional languages.
+
+Go solves the issue using channels, to provide secure pipeline through which info can safely flow. Only accessible by one actor at a time, no matter how many entities are interested in the data.
+
+[Demo: Basic Channels](channels/basic.go)
+
+[Demo: Buffered Channels](channels/buffered.go)
+
+[Demo: Closing Channels](channels/closing.go)
+
+Closing channel doesn't send it to be garbage collected, just makes it no longer reachable by sender or receiver.
+
+Closing channel informs that channel's receivers there are no more messages to be sent. Useful when you don't know at compile time how much data will be processing.
+
+[Demo: Ranging Over a Channels](channels/ranging.go)
+
+Same code as above but combine for loop and if condition into a single line:
+
+[Demo: Ranging Over a Channels Alternate](channels/ranging-alternate.go)
+
+[Demo: Switching Between Channels Alternate](channels/switching.go)
+
+Can listen on multiple channels at once and respond when message comes in on any of them.
+
+Useful when actor runs into issue processing message and throws error. Actor can use two channels, for success and failure. 
