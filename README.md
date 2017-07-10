@@ -789,7 +789,7 @@ myCourses :=make([]string, 5)
 Can also declare and initialize array on one line using shorthand:
 
 ```go
-myCourses := []string("Docker", "Puppet", "Python ")
+myCourses := []string{"Docker", "Puppet", "Python "}
 ```
 
 Above creates new slice of strings, with length and capacity of 3.
@@ -1349,8 +1349,11 @@ Same code as above but combine for loop and if condition into a single line:
 
 [Demo: Ranging Over a Channels Alternate](channels/ranging-alternate.go)
 
-[Demo: Switching Between Channels Alternate](channels/switching.go)
+[Demo: Switching Between Channels](channels/switching.go)
+[Demo: Switching Between Channels Alternate](channels/switching-alternate.go)
 
 Can listen on multiple channels at once and respond when message comes in on any of them.
 
-Useful when actor runs into issue processing message and throws error. Actor can use two channels, for success and failure. 
+Useful when actor runs into issue processing message and throws error. Actor can use two channels, for success and failure.
+
+Demo simulates app that sends message to someone. If successful, prints message to console, if message fails to be delivered, prints failure message.
