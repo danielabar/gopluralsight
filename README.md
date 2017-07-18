@@ -1357,3 +1357,23 @@ Can listen on multiple channels at once and respond when message comes in on any
 Useful when actor runs into issue processing message and throws error. Actor can use two channels, for success and failure.
 
 Demo simulates app that sends message to someone. If successful, prints message to console, if message fails to be delivered, prints failure message.
+
+## Integrating Goroutines and Channels
+
+### Review of Concurrency Models
+
+**Mutex** Mutual exclusion lock to directly manipulate process threads. App can guard a section of code against multiple thread access.
+
+**Events** Object signals when something interesting happens. Often used in UI's.
+
+**Callback** Function registered to be called up on completion of a long running task.
+
+**Promises** Evolution of callbacks. Chain series of asynchronous tasks without mess of callbacks.
+
+[Demo: Mutex Lock with Goroutine](goroutine-channel/mutex.go)
+
+Use `sync` package if multiple threads need to work on shared memory that can't be easily divided into channels.
+
+[Demo: Mutex Channel](goroutine-channel/mutex-channel.go)
+
+Simulate mutex behaviour with channels. However, not recommended for production, mutex will be more efficient. Just interesting note that it can be done.
