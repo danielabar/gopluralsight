@@ -19,10 +19,18 @@ func main() {
 		for {
 			msg, ok := <-logCh
 			if ok {
-				f, _ := os.OpenFile("./log.txt", os.O_APPEND, os.ModeAppend)
+				// this doesn't work
+				// f, _ := os.OpenFile("./log.txt", os.O_APPEND, os.ModeAppend)
+				// this does
+				f, _ := os.OpenFile("./log.txt", os.O_RDWR|os.O_APPEND, os.ModeAppend)
 
 				logTime := time.Now().Format(time.RFC3339)
-				f.WriteString(logTime + " - " + msg)
+				n, err := f.WriteString(logTime + " - " + msg)
+				if err != nil {
+					fmt.Println(err)
+				} else {
+					fmt.Println("wrote ", n, " bytes")
+				}
 				f.Close()
 			} else {
 				break
